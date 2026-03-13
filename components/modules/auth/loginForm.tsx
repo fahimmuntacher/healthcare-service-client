@@ -1,10 +1,17 @@
-"use client"
+"use client";
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import AppField from "@/components/shared/form/AppField";
 import AppSubmitButton from "@/components/shared/form/AppSubmitButton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { loginAction } from "@/src/app/(commonLayouts)/(authRouteGroup)/login/_action";
 import { ILoginPayload, loginZodSchema } from "@/src/zod/auth.validation";
 import { useForm } from "@tanstack/react-form";
@@ -13,37 +20,41 @@ import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
-const LoginForm = () => {
-    // const queryClient = useQueryClient();
+interface LoginFormProps {
+  redirectPath?: string;
+}
 
-    const [serverError, setServerError] = useState<string | null>(null);
-    const [showPassword, setShowPassword] = useState(false);
+const LoginForm = ({ redirectPath }: LoginFormProps) => {
+  // const queryClient = useQueryClient();
 
-    const { mutateAsync , isPending} = useMutation({
-        mutationFn : (payload : ILoginPayload) => loginAction(payload),
-    })
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState(false);
 
-    const form = useForm({
-        defaultValues : {
-            email : "",
-            password : "",
-        },
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: (payload: ILoginPayload) => loginAction(payload, redirectPath),
+  });
 
-        onSubmit : async ({value}) => {
-            setServerError(null);
-            try {
-                const result = await mutateAsync(value) as any;
+  const form = useForm({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
 
-                if(!result.success ){
-                    setServerError(result.message || "Login failed");
-                    return ;
-                }
-            } catch (error : any) {
-                console.log(`Login failed: ${error.message}`);
-                setServerError(`Login failed: ${error.message}`);
-            }
+    onSubmit: async ({ value }) => {
+      setServerError(null);
+      try {
+        const result = (await mutateAsync(value)) as any;
+
+        if (!result.success) {
+          setServerError(result.message || "Login failed");
+          return;
         }
-    })
+      } catch (error: any) {
+        console.log(`Login failed: ${error.message}`);
+        setServerError(`Login failed: ${error.message}`);
+      }
+    },
+  });
   return (
     <Card className="w-full max-w-md mx-auto shadow-md">
       <CardHeader className="text-center">
@@ -94,11 +105,10 @@ const LoginForm = () => {
                 className="cursor-pointer"
                 append={
                   <Button
-                  type="button"
+                    type="button"
                     onClick={() => setShowPassword((value) => !value)}
                     variant="ghost"
                     size="icon"
-                    
                   >
                     {showPassword ? (
                       <EyeOff className="size-4" aria-hidden="true" />
@@ -130,7 +140,11 @@ const LoginForm = () => {
             selector={(s) => [s.canSubmit, s.isSubmitting] as const}
           >
             {([canSubmit, isSubmitting]) => (
-              <AppSubmitButton isPending={isSubmitting || isPending} pendingLabel="Logging In...." disabled={!canSubmit}>
+              <AppSubmitButton
+                isPending={isSubmitting || isPending}
+                pendingLabel="Logging In...."
+                disabled={!canSubmit}
+              >
                 Log In
               </AppSubmitButton>
             )}
@@ -148,11 +162,15 @@ const LoginForm = () => {
           </div>
         </div>
 
-        <Button variant="outline" className="w-full" onClick={() => {
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={() => {
             const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
             //TODO redirect path after login in frontend
             window.location.href = `${baseUrl}/auth/login/google`;
-        }}>
+          }}
+        >
           <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
             <path
               fill="currentColor"
@@ -177,17 +195,17 @@ const LoginForm = () => {
 
       <CardFooter className="justify-center border-t pt-4">
         <p className="text-sm text-muted-foreground">
-              Don&apos;t have an account?{" "}
-            <Link
-                href="/register"
-                className="text-primary font-medium hover:underline underline-offset-4"
-            >
-                Sign Up for an account
-            </Link>
+          Don&apos;t have an account?{" "}
+          <Link
+            href="/register"
+            className="text-primary font-medium hover:underline underline-offset-4"
+          >
+            Sign Up for an account
+          </Link>
         </p>
       </CardFooter>
     </Card>
   );
-}
+};
 
-export default LoginForm
+export default LoginForm;
