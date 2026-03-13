@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { setTokenInCookies } from "../lib/tokenUtils";
 
 const BASE_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+// console.log(BASE_API_URL);
 
 if (!BASE_API_URL) {
   throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined");
@@ -52,7 +53,8 @@ export async function getUserInfo() {
   try {
     const cookieStore = await cookies();
     const accessToken = cookieStore.get("accessToken")?.value;
-
+    const sessionToken = cookieStore.get("better-auth.session_token")?.value;
+    console.log(accessToken);
     if (!accessToken) {
       return null;
     }
@@ -61,9 +63,11 @@ export async function getUserInfo() {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Cookie: `accessToken=${accessToken}`,
+
+        Cookie: `accessToken=${accessToken}; better-auth.session_token=${sessionToken}`,
       },
     });
+    console.log(res);
 
     if (!res.ok) {
       console.error("Failed to fetch user info:", res.status, res.statusText);
@@ -71,6 +75,7 @@ export async function getUserInfo() {
     }
 
     const { data } = await res.json();
+    console.log(data);
 
     return data;
   } catch (error) {

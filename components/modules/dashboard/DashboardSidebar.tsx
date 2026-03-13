@@ -6,9 +6,10 @@ import { getNavItemsByRole } from "@/src/lib/navItems";
 
 const DashboardSidebar = async () => {
   const userInfo = await getUserInfo();
-  const navItems: NavSection[] = getNavItemsByRole(userInfo.role);
+  // console.log(userInfo.role);
+  const navItems: NavSection[] = getNavItemsByRole(userInfo?.role);
 
-  const dashboardHome = getDefaultDashboardRoute(userInfo.role);
+  const dashboardHome = getDefaultDashboardRoute(userInfo?.role);
   return (
     <DashboardSidebarContent
       userInfo={userInfo}

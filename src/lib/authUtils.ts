@@ -68,6 +68,7 @@ export const getRouteOwner = (pathname : string) : "SUPER_ADMIN" | "ADMIN" | "DO
 }
 
 export const getDefaultDashboardRoute = (role : UserRole) => {
+    console.log(role);
     if(role === "ADMIN" || role === "SUPER_ADMIN") {
         return "/admin/dashboard";
     }

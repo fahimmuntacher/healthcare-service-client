@@ -21,6 +21,8 @@ interface DashboardSidebarContentProps {
 
 const DashboardSidebarContent = ({dashboardHome, navItems, userInfo} : DashboardSidebarContentProps) => {
     const pathname = usePathname()
+    // console.log(pathname);
+    // console.log(navItems);
   return (
     <div className="hidden md:flex h-full w-64 flex-col border-r bg-card overflow-y-auto">
       {/* Logo / Brand */}
@@ -33,7 +35,7 @@ const DashboardSidebarContent = ({dashboardHome, navItems, userInfo} : Dashboard
       {/* Navigation Area */}
       <ScrollArea className="flex-1 px-3 py-4">
         <nav className="space-y-6">
-          {navItems.map((section, sectionId) => (
+          {navItems?.map((section, sectionId) => (
             <div key={sectionId}>
               {section.title && (
                 <h4 className="mb-2 px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -46,7 +48,7 @@ const DashboardSidebarContent = ({dashboardHome, navItems, userInfo} : Dashboard
                   const isActive = pathname === item.href;
                   // Icon Mapper Function
                   const Icon = getIconComponent(item.icon);
-
+                  console.log(Icon);
                   return (
                     <Link
                       href={item.href}
