@@ -42,15 +42,15 @@ const UserDropdown = ({ userInfo }: UserDropdownProps) => {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>
-          <Link href={"/my-profile"}>
+        <DropdownMenuItem className="cursor-pointer mb-1">
+          <Link href={"/my-profile"} className="flex ">
             <User className="mr-2 h-4 w-4" />
             My Profile
           </Link>
         </DropdownMenuItem>
 
-        <DropdownMenuItem>
-          <Link href={"/change-password"}>
+        <DropdownMenuItem className="cursor-pointer">
+          <Link href={"/change-password"} className="flex">
             <Key className="mr-2 h-4 w-4" />
             Change Password
           </Link>
